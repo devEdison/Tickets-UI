@@ -1,59 +1,94 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider, Tag } from "antd";
-import { getUsers, deleteUser, editUser, addUser } from "@/api/user";
+import { Card, Button, Table, message, Divider } from "antd";
+import { getCreate, deleteCreate, editCreate, addCreate } from "@/api/create";
+import { getCatalog, getTicketUser} from "@/api/ticket";
 import TypingCard from '@/components/TypingCard'
-import EditUserForm from "./forms/edit-user-form"
-import AddUserForm from "./forms/add-user-form"
+import EditCreateForm from "./forms/edit-create-form"
+import AddCreateForm from "./forms/add-create-form"
+import { getUser} from "@/utils/auth";
 const { Column } = Table;
-class User extends Component {
+class Create extends Component {
   state = {
     data: [],
-    editUserModalVisible: false,
-    editUserModalLoading: false,
+    RowData: [],
+    priority: [],
+    status: [],
+    user: [],
+    category: [],
+    kind: [],
+    departament: [],
+    editCreateModalVisible: false,
+    editCreateModalLoading: false,
     currentRowData: {},
-    addUserModalVisible: false,
-    addUserModalLoading: false,
+    addCreateModalVisible: false,
+    addCreateModalLoading: false
   };
-  getUsers = async () => {
-    const result = await getUsers()
+  getCreate = async (userName) => {
+    const result = await getCreate(userName)
     const { data } = result
     if (result.status === 200) {
       this.setState({
         data
       })
     }
+    this.getCatalog()
   }
-  handleEditUser = (row) => {
+
+  getCatalog = async () => {
+    const result = await getCatalog()
+    const { data } = result
+    if (result.status === 200) {
+      this.setState({
+        priority: data.priority,
+        status: data.status,
+        user: data.user,
+        category: data.category,
+        kind: data.kind,
+        departament: data.departament
+      })
+    }
+  }
+
+  getTicketUser = async (id) => {
+    const result = await getTicketUser(id)
+    const { data } = result
+    if (result.status === 200) {
+      this.setState({
+        RowData: data[0]
+      })
+    }
+    const {RowData} = this.state
+  }
+
+  handleEditCreate = (row) => {
+    this.getTicketUser(row.id)
     this.setState({
       currentRowData:Object.assign({}, row),
-      editUserModalVisible: true,
+      editCreateModalVisible: true,
     });
+    
   };
 
-  handleDeleteUser = (row) => {
+  handleDeleteCreate = (row) => {
     const { id } = row
-    if (id === "admin") {
-      message.error("¡El usuario administrador no se puede eliminar!")
-      return
-    }
-    deleteUser(id).then(res => {
+    deleteCreate(id).then(res => {
       message.success("Eliminado con éxito")
-      this.getUsers();
+      this.getCreate();
     })
   }
   
-  handleEditUserOk = _ => {
-    const { form } = this.editUserFormRef.props;
+  handleEditCreateOk = _ => {
+    const { form } = this.editCreateFormRef.props;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
       this.setState({ editModalLoading: true, });
-      editUser(values).then((response) => {
+      editCreate(values).then((response) => {
         form.resetFields();
-        this.setState({ editUserModalVisible: false, editUserModalLoading: false });
+        this.setState({ editCreateModalVisible: false, editCreateModalLoading: false });
         message.success("Editar con éxito!")
-        this.getUsers()
+        this.getCreate()
       }).catch(e => {
         message.success("Error al editar, inténtalo de nuevo!")
       })
@@ -63,91 +98,97 @@ class User extends Component {
 
   handleCancel = _ => {
     this.setState({
-      editUserModalVisible: false,
-      addUserModalVisible: false,
+      editCreateModalVisible: false,
+      addCreateModalVisible: false,
     });
   };
 
-  handleAddUser = (row) => {
+  handleAddCreate = (row) => {
     this.setState({
-      addUserModalVisible: true,
+      addCreateModalVisible: true,
     });
   };
 
-  handleAddUserOk = _ => {
-    const { form } = this.addUserFormRef.props;
+  handleAddCreateOk = _ => {
+    const { form } = this.addCreateFormRef.props;
     form.validateFields((err, values) => {
       if (err) {
         return;
       }
-      this.setState({ addUserModalLoading: true, });
-      addUser(values).then((response) => {
+      this.setState({ addCreateModalLoading: true, });
+      addCreate(values).then((response) => {
         form.resetFields();
-        this.setState({ addUserModalVisible: false, addUserModalLoading: false });
+        this.setState({ addCreateModalVisible: false, addCreateModalLoading: false });
         message.success("Agregado exitosamente!")
-        this.getUsers()
+        this.getCreate()
       }).catch(e => {
         message.success("No se pudo agregar. Vuelve a intentarlo.")
       })
     });
   };
-  componentDidMount() {
-    this.getUsers()
+  UNSAFE_componentWillMount() {
+    this.getCreate(getUser())
   }
   render() {
     const { data } = this.state
+    
     const title = (
       <span>
-        <Button type='primary' onClick={this.handleAddUser}>Agregar usuario</Button>
+        <Button type='primary' onClick={this.handleAddCreate}>Agregar nuevo</Button>
       </span>
     )
-    const cardContent = `Aquí, puede administrar usuarios en el sistema, como agregar un nuevo usuario o modificar un usuario existente en el sistema.`
+    const cardContent = `Se utiliza para crear nuevos ticket, estos seran asignados automaticamente a un usuario operador.`
     return (
       <div className="app-container">
-        <TypingCard title='Gestión de usuarios' source={cardContent} />
+        <TypingCard title='Gestión de ticket' source={cardContent} />
         <br/>
         <Card title={title}>
           <Table bordered rowKey="id" dataSource={data} pagination={false}>
             <Column title="ID" dataIndex="id" key="id" align="center"/>
-            <Column title="Nombre" dataIndex="name" key="name" align="center"/>
-            <Column title="Rol" dataIndex="roles[0].rolName" key="roles" align="center"/>
-            <Column title="email" dataIndex="email" key="email" align="center" />
-            <Column title="Activo" dataIndex="active" key="active" align="center" render={(active) => {
-                let color =
-                  active === true ? "green" : active === false ? "red" : "";
-                return (
-                  <Tag color={color} key={active}>
-                    {active}
-                  </Tag>
-                );
-              }}/>
+            <Column title="Título" dataIndex="title" key="title1" align="center"/>
+            <Column title="Asignado a" dataIndex="asigned_id" key="asigned_id" align="center"/>
+            <Column title="Prioridad" dataIndex="priority_id" key="priority_id" align="center" />
+            <Column title="Estado" dataIndex="status_id" key="status_id" align="center"/>
             <Column title="Funciones" key="action" width={195} align="center"render={(text, row) => (
               <span>
-                <Button type="primary" shape="circle" icon="edit" title="Editar" onClick={this.handleEditUser.bind(null,row)}/>
+                <Button type="primary" shape="circle" icon="edit" title="Editar" onClick={this.handleEditCreate.bind(null,row)}/>
                 <Divider type="vertical" />
-                <Button type="primary" shape="circle" icon="delete" title="Eliminar" onClick={this.handleDeleteUser.bind(null,row)}/>
+                <Button type="primary" shape="circle" icon="delete" title="Eliminar" onClick={this.handleDeleteCreate.bind(null,row)}/>
               </span>
             )}/>
           </Table>
         </Card>
-        <EditUserForm
+        <EditCreateForm
+          RowData={this.state.RowData}
+          priority= {this.state.priority}
+          status= {this.state.status}
+          user= {this.state.user}
+          category= {this.state.category}
+          kind= {this.state.kind}
+          departament= {this.state.departament}
           currentRowData={this.state.currentRowData}
-          wrappedComponentRef={formRef => this.editUserFormRef = formRef}
-          visible={this.state.editUserModalVisible}
-          confirmLoading={this.state.editUserModalLoading}
+          wrappedComponentRef={formRef => this.editCreateFormRef = formRef}
+          visible={this.state.editCreateModalVisible}
+          confirmLoading={this.state.editCreateModalLoading}
           onCancel={this.handleCancel}
-          onOk={this.handleEditUserOk}
+          onOk={this.handleEditCreateOk}
         />  
-        <AddUserForm
-          wrappedComponentRef={formRef => this.addUserFormRef = formRef}
-          visible={this.state.addUserModalVisible}
-          confirmLoading={this.state.addUserModalLoading}
+        <AddCreateForm
+          priority= {this.state.priority}
+          status= {this.state.status}
+          user= {this.state.user}
+          category= {this.state.category}
+          kind= {this.state.kind}
+          departament= {this.state.departament}
+          wrappedComponentRef={formRef => this.addCreateFormRef = formRef}
+          visible={this.state.addCreateModalVisible}
+          confirmLoading={this.state.addCreateModalLoading}
           onCancel={this.handleCancel}
-          onOk={this.handleAddUserOk}
+          onOk={this.handleAddCreateOk}
         />  
       </div>
     );
   }
 }
 
-export default User;
+export default Create;

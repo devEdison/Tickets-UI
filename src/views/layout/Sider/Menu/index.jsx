@@ -97,7 +97,7 @@ class Meun extends Component {
     this.props.addTag(menuItem);
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const menuTreeNode = this.getMenuNodes(menuList);
     this.setState({
       menuTreeNode,

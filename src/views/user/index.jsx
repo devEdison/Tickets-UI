@@ -55,7 +55,7 @@ class User extends Component {
         message.success("Editar con éxito!")
         this.getUsers()
       }).catch(e => {
-        message.success("Error al editar, inténtalo de nuevo!")
+        message.error("Error al editar, inténtalo de nuevo!")
       })
       
     });
@@ -87,7 +87,7 @@ class User extends Component {
         message.success("Agregado exitosamente!")
         this.getUsers()
       }).catch(e => {
-        message.success("No se pudo agregar. Vuelve a intentarlo.")
+        message.error("No se pudo agregar. Vuelve a intentarlo.")
       })
     });
   };

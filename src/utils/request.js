@@ -1,11 +1,11 @@
 import axios from "axios";
 import store from "@/store";
 import { getToken } from "@/utils/auth";
-//import { logout } from "@/store/actions";
+import { logout } from "@/store/actions";
 
 
 const service = axios.create({
-  baseURL: process.env.REACT_APP_BASE_API, // api 的 base_url
+  baseURL: 'http://localhost:8080', // api 的 base_url
 });
 
 // Solicitar interceptor
@@ -38,8 +38,8 @@ service.interceptors.response.use(
  },
   (error) => {
     console.log("err:" + error); // for debug
-    //let token = store.getState().user.token;
-    //store.dispatch(logout(token));
+    let token = store.getState().user.token;
+    store.dispatch(logout(token));
     return Promise.reject(error);
   }
 );

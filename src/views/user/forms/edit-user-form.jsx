@@ -15,7 +15,7 @@ class EditUserForm extends Component {
     const { id, name, role, email, active } = currentRowData;
     const formItemLayout = {
       labelCol: {
-        sm: { span: 4 },
+        sm: { span: 8 },
       },
       wrapperCol: {
         sm: { span: 16 },

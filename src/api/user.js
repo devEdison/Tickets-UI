@@ -31,7 +31,7 @@ export function deleteUser(id) {
 
 export function editUser(data) {
   return request({
-    url: '/user/edit',
+    url: '/auth/edit',
     method: 'post',
     data
   })
@@ -39,7 +39,7 @@ export function editUser(data) {
 
 export function reqValidatUserID(data) {
   return request({
-    url: '/user/validatUserID',
+    url: '/auth/validatUserID',
     method: 'post',
     data
   })
@@ -47,7 +47,7 @@ export function reqValidatUserID(data) {
 
 export function addUser(data) {
   return request({
-    url: '/user/add',
+    url: '/auth/add',
     method: 'post',
     data
   })

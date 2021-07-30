@@ -1,33 +1,29 @@
 import request from '@/utils/request'
 import { getToken} from "@/utils/auth";
 
-export function reqUserInfo(userName) {
+export function reqCreateInfo(token, userName) {
   return request({
-    url: '/auth/profile/'.concat(userName),
+    url: '/ticket/profile/'.concat(userName),
     headers: {
       "Content-type": "application/json",
-       "Authorization": `Bearer ${getToken()}`,
+       "Authorization": `Bearer ${token}`,
   },
   })
 }
 
-export function getUsers() {
+export function getCreate(userName) {
   return request({
-    url: '/auth/list',
-    method: 'get'
-  })
-}
-
-export function getCatalog() {
-  return request({
-    url: '/ticket/catalog',
-    method: 'get'
+    url: '/ticket/detail/user/'.concat(userName),
+    headers: {
+      "Content-type": "application/json",
+       "Authorization": `Bearer ${getToken()}`,
+  },
   })
 }
 
 export function getTicketUser(id) {
   return request({
-    url: '/ticket/view/'.concat(id),
+    url: '/ticket/detail/user/'.concat(id),
     headers: {
       "Content-type": "application/json",
        "Authorization": `Bearer ${getToken()}`,
@@ -35,9 +31,9 @@ export function getTicketUser(id) {
   })
 }
 
-export function deleteUser(id) {
+export function deleteCreate(id) {
   return request({
-    url: '/auth/delete/'.concat(id),
+    url: '/ticket/delete/'.concat(id),
     method: 'delete',
     headers: {
       "Content-type": "application/json",
@@ -46,25 +42,25 @@ export function deleteUser(id) {
   })
 }
 
-export function editUser(data) {
+export function editCreate(data) {
   return request({
-    url: '/user/edit',
+    url: '/ticket/edit',
     method: 'post',
     data
   })
 }
 
-export function reqValidatUserID(data) {
+export function reqValidatCreateID(data) {
   return request({
-    url: '/user/validatUserID',
+    url: '/ticket/validatCreateID',
     method: 'post',
     data
   })
 }
 
-export function addUser(data) {
+export function addCreate(data) {
   return request({
-    url: '/user/add',
+    url: '/ticket/add',
     method: 'post',
     data
   })

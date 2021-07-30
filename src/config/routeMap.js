@@ -6,8 +6,6 @@ const Category = Loadable({loader: () => import(/*webpackChunkName:'Category'*/'
 const Kind = Loadable({loader: () => import(/*webpackChunkName:'Kind'*/'@/views/catalogs/kind'),loading: Loading});
 const Status = Loadable({loader: () => import(/*webpackChunkName:'Status'*/'@/views/catalogs/status'),loading: Loading});
 const Priority = Loadable({loader: () => import(/*webpackChunkName:'Priority'*/'@/views/catalogs/priority'),loading: Loading});
-const ExportExcel = Loadable({loader: () => import(/*webpackChunkName:'ExportExcel'*/'@/views/excel/exportExcel'),loading: Loading});
-const UploadExcel = Loadable({ loader: () => import(/*webpackChunkName:'UploadExcel'*/'@/views/excel/uploadExcel'),loading: Loading });
 const Error404 = Loadable({loader: () => import(/*webpackChunkName:'Error404'*/'@/views/error/404'),loading: Loading});
 const User = Loadable({loader: () => import(/*webpackChunkName:'User'*/'@/views/user'),loading: Loading});
 const Assigned = Loadable({loader: () => import(/*webpackChunkName:'Assigned'*/'@/views/ticket/assigned'),loading: Loading});
@@ -16,18 +14,16 @@ const Assign = Loadable({loader: () => import(/*webpackChunkName:'Assign'*/'@/vi
 const About = Loadable({loader: () => import(/*webpackChunkName:'About'*/'@/views/about'),loading: Loading});
 
 export default [
-  { path: "/dashboard", component: Dashboard, roles: ["ROLE_ADMIN","ROLE_USER"] },
-  { path: "/catalogs/departaments", component: Departaments, roles: ["ROLE_ADMIN","ROLE_USER"] },
-  { path: "/catalogs/category", component: Category, roles: ["ROLE_ADMIN","ROLE_USER"] },
-  { path: "/catalogs/kind", component: Kind, roles: ["ROLE_ADMIN","ROLE_USER"] },
-  { path: "/catalogs/priority", component: Priority, roles: ["ROLE_ADMIN","ROLE_USER"] },
-  { path: "/catalogs/status", component: Status, roles: ["ROLE_ADMIN","ROLE_USER"] },
-  { path: "/ticket/assigned", component: Assigned, roles: ["ROLE_ADMIN","ROLE_USER"] },
-  { path: "/ticket/create", component: Create, roles: ["ROLE_ADMIN","ROLE_USER"] },
-  { path: "/ticket/assign", component: Assign, roles: ["ROLE_ADMIN","ROLE_USER"] },
-  { path: "/excel/export", component: ExportExcel, roles: ["ROLE_ADMIN","ROLE_USER"] },
-  { path: "/excel/upload", component: UploadExcel, roles: ["ROLE_ADMIN","ROLE_USER"] },
+  { path: "/dashboard", component: Dashboard, roles: ["ROLE_ADMIN","ROLE_USER","ROLE_OPER"] },
+  { path: "/catalogs/departaments", component: Departaments, roles: ["ROLE_ADMIN","ROLE_USER","ROLE_OPER"] },
+  { path: "/catalogs/category", component: Category, roles: ["ROLE_ADMIN","ROLE_USER","ROLE_OPER"] },
+  { path: "/catalogs/kind", component: Kind, roles: ["ROLE_ADMIN","ROLE_USER","ROLE_OPER"] },
+  { path: "/catalogs/priority", component: Priority, roles: ["ROLE_ADMIN","ROLE_USER","ROLE_OPER"] },
+  { path: "/catalogs/status", component: Status, roles: ["ROLE_ADMIN","ROLE_USER","ROLE_OPER"] },
+  { path: "/ticket/assigned", component: Assigned, roles: ["ROLE_ADMIN","ROLE_USER","ROLE_OPER"] },
+  { path: "/ticket/create", component: Create, roles: ["ROLE_ADMIN","ROLE_USER","ROLE_OPER"] },
+  { path: "/ticket/assign", component: Assign, roles: ["ROLE_ADMIN","ROLE_USER","ROLE_OPER"] },
   { path: "/user", component: User, roles: ["ROLE_ADMIN"] },
-  { path: "/about", component: About, roles: ["ROLE_ADMIN", "ROLE_USER"] },
+  { path: "/about", component: About, roles: ["ROLE_ADMIN", "ROLE_USER","ROLE_OPER"] },
   { path: "/error/404", component: Error404 },
 ];

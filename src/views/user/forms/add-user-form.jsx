@@ -7,7 +7,7 @@ class AddUserForm extends Component {
     const { getFieldDecorator } = form;
     const formItemLayout = {
       labelCol: {
-        sm: { span: 4 },
+        sm: { span: 8 },
       },
       wrapperCol: {
         sm: { span: 16 },
@@ -49,6 +49,7 @@ class AddUserForm extends Component {
               <Select style={{ width: 120 }}>
                 <Select.Option value="ROLE_ADMIN">ADMIN</Select.Option>
                 <Select.Option value="ROLE_USER">USER</Select.Option>
+                <Select.Option value="ROLE_OPER">OPERERADOR</Select.Option>
               </Select>
             )}
           </Form.Item>
